@@ -8,7 +8,7 @@ reveal:
 ---
 
 # Markyll
-This project is still in progress. 
+This project is still in progress. [edit this](../../edit/gh-pages/README.md)
 
 ## Here's the idea:
 I was annoyed by most presentation tools who

@@ -39,7 +39,7 @@ This is the universe
 
 ---
 
-```
+```markdown
 # Slide One
 - Hello world
 - Hello computer

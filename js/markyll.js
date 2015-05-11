@@ -7,6 +7,7 @@
 // - Animate slides
 //
 // TODO:
+// - Ignore config options in code nodes
 // - Subsections based on H2+ headers
 // - Parameters as content with underscores http://_big_joke_.com/
 // - Disable animations on headers

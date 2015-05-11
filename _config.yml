@@ -1,0 +1,48 @@
+name: jekyll-reveal 
+markdown: kramdown
+highlighter: pygments
+
+kramdown:
+  input: GFM
+
+collections:
+  slides:
+    output: true
+
+defaults:
+
+  -
+    scope:
+      path: ""
+    values:
+      height: 500 
+      width: 970
+      margin: 0.1
+      minScale: 0.2
+      maxScale: 1.5
+      layout: slide
+      reveal:
+        controls: true
+        progress: true
+        slideNumber: false
+        history: false
+        keyboard: true
+        overview: true
+        center: true
+        touch: true
+        loop: false
+        rtl: false
+        fragments: true
+        embedded: false
+        autoSlide: 0
+        autoSlideStoppable: true
+        mouseWheel: false
+        hideAddressBar: true
+        previewLinks: false
+        transition: default
+        transitionSpeed: default
+        backgroundTransition: default
+        viewDistance: 3
+        parallaxBackgroundImage:
+        parallaxBackgroundSize:
+        theme: default

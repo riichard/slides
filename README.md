@@ -1,3 +1,12 @@
+---
+title: Test slide 1
+description: Use another theme (moon.css) and disable the progress bar at the bottom 
+reveal:
+  theme: moon
+  progress: false
+  transition: concave
+---
+
 # Markyll
 This project is still in progress. 
 

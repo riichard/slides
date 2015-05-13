@@ -1,6 +1,7 @@
 ---
 title: Test slide 1
 description: Use another theme (moon.css) and disable the progress bar at the bottom 
+animate: roll-in
 reveal:
   theme: moon
   progress: false
@@ -8,11 +9,23 @@ reveal:
 ---
 
 
-# Slide one
+# Slide one :zap:
 background-video: 
 background-iframe: 
 background-image: 
 {% comment %}background: auto detect based on extension of url or hex code, otherwise image {% endcomment %}
+
+```
+background:red
+I should be ignored
+```
+
+## Image slide
+background: http://riichard.com/images/avatar_45_test.jpg
+
+---
+
+![hi](http://riichard.com/images/avatar_45.jpg)
 
 ## In depth
 Here we go deeper into the content

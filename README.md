@@ -7,7 +7,7 @@ reveal:
   transition: concave
 ---
 
-# Markyll
+# Markyll :zap:
 This project is still in progress. [edit this](../../edit/gh-pages/README.md)
 
 ## Here's the idea:

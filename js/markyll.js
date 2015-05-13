@@ -7,15 +7,16 @@
 // - Animate slides
 // - IFrame / Video URL as background
 // - Subsections based on H2+ headers
+// - Ignore config options in code nodes
+// - Disable animations on first nodes
 //
 // TODO:
-// - Ignore config options in code nodes
 // - Parameters as content with underscores http://_big_joke_.com/
-// - Disable animations on headers
 // Next Release:
 // - Auto resize text size if it's overflowing
 // - Sets of background images
 // - Notes working without socketio
+// - Easy include icons (fontawesome)
 // - Fragment specific items
 
 var
@@ -148,6 +149,9 @@ var
           continue;
         }
 
+        // The animate config option will set a variable and will in a later
+        // process set the animation to the slide.
+        // We do this so we can set a global animation option
         if(split[0] === 'animate'){
           animate = line.substring(line.indexOf(':')+1);
 
@@ -184,7 +188,7 @@ var
       continue;
     }
 
-    // Add the animation settings to the node if they exist
+    // Set the animation settings to the node if they exist
     if(animate !== false && animate !== 'false' && animate !== ''){
       // When animating a list, animate it's children instead
       // Otherwise the UL node will be animated, and everything will appear all at once
@@ -193,7 +197,10 @@ var
           animateNode($node.children[ci], animate);
         }
       }
-      else {
+      // Set the animation.
+      // But not on the first node. By checking how many nodes there are in the
+      // slide, we can see if we still have to append the first one or not
+      else if($slide.children.length > 0) {
         animateNode($node, animate);
       }
     }

@@ -5,15 +5,16 @@
 // - Remove config text from object
 // - Fragment list items, globally or slide specific
 // - Animate slides
+// - IFrame / Video URL as background
+// - Subsections based on H2+ headers
 //
 // TODO:
 // - Ignore config options in code nodes
-// - Subsections based on H2+ headers
 // - Parameters as content with underscores http://_big_joke_.com/
 // - Disable animations on headers
 // Next Release:
+// - Auto resize text size if it's overflowing
 // - Sets of background images
-// - IFrame / Video URL as background
 // - Notes working without socketio
 // - Fragment specific items
 
@@ -126,42 +127,46 @@ var
       $slide = C;
     }
 
-    var textLines = $node.innerHTML.split("\n"), newHtml = '';
-    for(i=0; i < textLines.length; i++ ) {
-      line = textLines[i];
-      split = line.split(':');
+    // Read config options in the node
+    // Don't do this for <code> elements
+    if($node.tagName !== 'CODE') {
+      var textLines = $node.innerHTML.split("\n"), newHtml = '';
+      for(i=0; i < textLines.length; i++ ) {
+        line = textLines[i];
+        split = line.split(':');
 
-      if(i===0 && split[0] === 'notes'){
-        isNoting = true;
-        $notes = document.createElement('aside');
-        $notes.className = 'notes';
+        if(i===0 && split[0] === 'notes'){
+          isNoting = true;
+          $notes = document.createElement('aside');
+          $notes.className = 'notes';
 
-        // Add the just created 'notes' element to the slide
-        $slide.appendChild($notes);
+          // Add the just created 'notes' element to the slide
+          $slide.appendChild($notes);
 
-        // Remove the 'Notes: ' part from the content
-        $node.innerHTML = $node.innerHTML.replace(/^notes?\:\s?/i,'');
-        continue;
-      }
+          // Remove the 'Notes: ' part from the content
+          $node.innerHTML = $node.innerHTML.replace(/^notes?\:\s?/i,'');
+          continue;
+        }
 
-      if(split[0] === 'animate'){
-        animate = line.substring(line.indexOf(':')+1);
+        if(split[0] === 'animate'){
+          animate = line.substring(line.indexOf(':')+1);
 
-        // Remove the config line from the HTML
-        $node.innerHTML = $node.innerHTML.replace(line,'');
-      }
+          // Remove the config line from the HTML
+          $node.innerHTML = $node.innerHTML.replace(line,'');
+        }
 
-      // Only add the option if its in a whitelisted array of element options
-      if(~elementOptions.indexOf(split[0])){
-        $slide.setAttribute(
-          // Allow the ID to be set to the slide, without the 'data-' prefix
-          split[0] === 'id'
-            ? split[0]
-            : 'data-'+split[0],
-          line.substring(line.indexOf(':')+1));
+        // Only add the option if its in a whitelisted array of element options
+        if(~elementOptions.indexOf(split[0])){
+          $slide.setAttribute(
+            // Allow the ID to be set to the slide, without the 'data-' prefix
+            split[0] === 'id'
+              ? split[0]
+              : 'data-'+split[0],
+            line.substring(line.indexOf(':')+1));
 
-        // Remove the config line from the HTML
-        $node.innerHTML = $node.innerHTML.replace(line,'');
+          // Remove the config line from the HTML
+          $node.innerHTML = $node.innerHTML.replace(line,'');
+        }
       }
     }
 

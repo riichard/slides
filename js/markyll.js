@@ -10,6 +10,7 @@
 // - Ignore config options in code nodes
 // - Disable animations on first nodes
 // - Parameters as content with underscores http://_big_joke_.com/
+// - Ignore config options in code nodes
 //
 // TODO:
 // Next Release:

@@ -7,8 +7,8 @@ reveal:
   transition: concave
 ---
 
-# Markyll
-This project is still in progress. 
+# Markyll :zap:
+This project is still in progress. [edit this](../../edit/gh-pages/README.md)
 
 ## Here's the idea:
 I was annoyed by most presentation tools who
@@ -39,7 +39,7 @@ This is the universe
 
 ---
 
-```
+```markdown
 # Slide One
 - Hello world
 - Hello computer

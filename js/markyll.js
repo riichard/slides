@@ -9,15 +9,20 @@
 // - Subsections based on H2+ headers
 // - Ignore config options in code nodes
 // - Disable animations on first nodes
+// - Parameters as content with underscores http://_big_joke_.com/
 //
 // TODO:
-// - Parameters as content with underscores http://_big_joke_.com/
 // Next Release:
+// - Apple Touch icon
+// - Align config
+// - Logo config
+// - Auto add layout the slides according to their content. Css only? ^^
 // - Auto resize text size if it's overflowing
 // - Sets of background images
 // - Notes working without socketio
 // - Easy include icons (fontawesome)
 // - Fragment specific items
+//
 
 var
   i, length, $slide = null, line, split,

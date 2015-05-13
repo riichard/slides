@@ -1,0 +1,18 @@
+<!doctype html>
+<script type="text/javascript">
+// What: This is a script that redirects the visitor to the gh-pages url
+// when coming from a github repo page.
+// ---
+// Why: This makes it easier to fork my repository on github without having to
+// change anything 
+var destination = './';
+if(document.referrer){
+  // Extract the repo's owner name and branch name from the referral url
+  var match = document.referrer.match(/https?\:\/\/github\.com\/([a-z0-9\_\-]+)\/([a-z0-9\_\-]+)\/?.*/i);
+  // Will only match when user is 
+  if(match){
+    destination = "http://"+match[1]+".github.io/"+match[2];
+  }
+}
+window.location = destination;
+</script>

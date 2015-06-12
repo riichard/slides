@@ -2,14 +2,14 @@
 title: Test slide 1
 description: Use another theme (moon.css) and disable the progress bar at the bottom 
 animate: roll-in
-reveal:
-  theme: moon
-  progress: false
-  transition: concave
+theme: moon
+progress: false
+transition: concave
+
 ---
 
 
-# Slide one :zap:
+# [heartbeat 3x] Slide one [glass spin] 
 background-video: 
 background-iframe: 
 background-image: 

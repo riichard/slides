@@ -1,6 +1,8 @@
 ---
 title: Trip in Morocco
 description: This is a slideshow of our trip in Morocco
+theme: moon
+blur: yes 
 
 ---
 

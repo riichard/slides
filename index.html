@@ -4,12 +4,6 @@ layout: overview
 ---
 
 <style type="text/css">
-  body {
-    padding-top: 50px;
-  }
-  .slide-tile {
-    padding:15px;
-  }
 </style>
   
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -47,9 +41,12 @@ layout: overview
 
 <div class="row-fluid">
   {% for slide in site.slides %}
-    <div class="col-md-4 col-sm-6 col-lg-4 slide-tile">
-      <iframe width="100%" height="300" src=".{{ slide.url }}"></iframe>
-      <h2><a class="slide-entry" href=".{{ slide.url }}">{{ slide.title }}</a></h2>
-    </div>
+    <div class="col-md-4 col-sm-6 col-lg-4">
+      <section class="slide-tile">
+        <iframe width="100%" height="300" src=".{{ slide.url }}"></iframe>
+        <a href=".{{ slide.url }}"><i class="glyphicon glyphicon-new-window"></i></a>
+        <h2><a class="slide-entry" href=".{{ slide.url }}">{{ slide.title }}</a></h2>
+      </div>
+    </section>
   {% endfor %}
 </div>

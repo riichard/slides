@@ -1,0 +1,32 @@
+body {
+  padding-top: 70px;
+  background:#eee;
+}
+
+.slide-tile {
+  background: #fff;
+  box-shadow: 0 1px 3px #C7C7C7;
+  border-radius:2px;
+  height:350px;
+}
+
+.slide-tile iframe {
+  border: 0;
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-top-right-radius: 2px;
+  -moz-border-radius-topleft: 2px;
+  -moz-border-radius-topright: 2px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+
+.slide-tile h2 {
+  font-size:18px;
+  margin:10px 15px;
+}
+
+.slide-tile .glyphicon {
+  position:absolute;
+  right:30px;
+  top:315px;
+}

@@ -4,6 +4,7 @@ body {
 }
 
 .slide-tile {
+  margin-bottom:20px;
   background: #fff;
   box-shadow: 0 1px 3px #C7C7C7;
   border-radius:2px;

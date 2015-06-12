@@ -8,7 +8,7 @@ blur: yes
 
 
 # Morocco
-background: /images/morocco/katie-in-sahara.jpg
+background: ../images/morocco/katie-in-sahara.jpg
 
 ---
 

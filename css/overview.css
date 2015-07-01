@@ -1,5 +1,9 @@
+html {
+  padding-bottom:100px;
+}
 body {
   padding-top: 70px;
+  padding-bottom: 170px;
   background:#eee;
 }
 
@@ -30,4 +34,26 @@ body {
   position:absolute;
   right:30px;
   top:315px;
+}
+
+.tagline {
+  position:absolute;
+  text-align:center;
+  padding-bottom:30px;
+  bottom:-40px;
+  left:15px;
+  right:15px;
+  z-index:-1;
+}
+
+.tagline > h3,
+.tagline > sub {
+  color:#a5a5a5;
+  text-shadow:1px 1px 0 white;
+}
+.tagline > sub {
+  font-size:14px;
+}
+.tagline > h3 > span {
+  font-family:monaco,courier;
 }

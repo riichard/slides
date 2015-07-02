@@ -3,3 +3,13 @@
   display:none;
 }
 
+/* Reveal.js sets a max-height and max-width to items in the background div.
+   This is meant to target embedded items in the slide, but is less nice when having a video background.*/
+.reveal > .backgrounds img,
+.reveal > .backgrounds video,
+.reveal > .backgrounds iframe {
+  max-height: inherit;
+  max-width: inherit;
+}
+
+

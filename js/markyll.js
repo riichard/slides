@@ -31,12 +31,12 @@
 // - Fragment specific items
 //
 
-var i, length, $slide = null, line, split,
-  $node, $notes, isNoting = false, subsliding,
-  $bulk = document.createDocumentFragment(),
-  $content = document.getElementById('content'),
-  $slides = document.getElementById('slides'),
-  elementOptions = [
+var $slide = null;
+var isNoting = false;
+var $bulk = document.createDocumentFragment();
+var $content = document.getElementById('content');
+var $slides = document.getElementById('slides');
+var elementOptions = [
     'id',
     'background',
     'background-image',
@@ -47,6 +47,13 @@ var i, length, $slide = null, line, split,
     'transition',
     'transition-speed'
   ];
+var i;
+var length;
+var line;
+var split;
+var $node;
+var $notes;
+var subsliding;
 
 // Animate is by defiault the globally set animation parameter
 // Once a slide adds it as a config flag, it will overwrite the default
@@ -149,9 +156,11 @@ while (($node = $nodes[0]) && $node !== undefined) {
     for (i = 0; i < textLines.length; i++) {
       line = textLines[i];
       split = line.split(':');
+      configKey = split[0];
+      configValue = line.substring(line.indexOf(':') + 1);
 
       // Parse the text to the notes section if it starts with notes:
-      if (i === 0 && split[0] === 'notes') {
+      if (i === 0 && configKey === 'notes') {
         isNoting = true;
         $notes = document.createElement('aside');
         $notes.className = 'notes';
@@ -167,22 +176,42 @@ while (($node = $nodes[0]) && $node !== undefined) {
       // The animate config option will set a variable and will in a later
       // process set the animation to the slide.
       // We do this so we can set a global animation option
-      if (split[0] === 'animate') {
-        animate = line.substring(line.indexOf(':') + 1);
+      if (configKey === 'animate') {
+        animate = configValue;
 
         // Remove the config line from the HTML
         $node.innerHTML = $node.innerHTML.replace(line, '');
       }
 
       // Only add the option if its in a whitelisted array of element options
-      if (~elementOptions.indexOf(split[0])) {
+      if (~elementOptions.indexOf(configKey)) {
+        var match;
+        console.log(configKey)
+
+        // Youtube background options
+        // If property is background-video and its a youtube link, grab the
+        // video id, and display its thumbnail as a background image.
+        // Later in our code, we will replace the created background divs with
+        // youtube players trough youtube player's api.
+        // I previously included the videos trough an embed code. This didn't
+        // allow me to mute the sound.
+        // Muting the sound is important when displaying the videos in an
+        // overview page.
+        if (configKey === 'background-video'
+            && (match = configValue.match(/https?\:\/\/www\.youtube\.com\/watch\?v=([A-Za-z0-9\_\-]+)/i)).length > 0) {
+          configKey = 'background';
+          configValue = 'https://img.youtube.com/vi/' + match[1] + '/maxresdefault.jpg';
+        }
+
+        // Set the (background-)attribute to the slide's tag to communicate with reveal.js's
+        // api
         $slide.setAttribute(
 
           // Allow the ID to be set to the slide, without the 'data-' prefix
-          split[0] === 'id'
-            ? split[0]
-            : 'data-' + split[0],
-          line.substring(line.indexOf(':') + 1));
+          configKey === 'id'
+            ? configKey
+            : 'data-' + configKey,
+          configValue);
 
         // Remove the config line from the HTML
         $node.innerHTML = $node.innerHTML.replace(line, '');
@@ -249,12 +278,13 @@ while (($node = $nodes[0]) && $node !== undefined) {
   $slide.appendChild($node);
 }
 
-// We bulk insert all our generated slides at once
+// Add the generated slides to the DOM
+// We add all the generated slides to one documentFragment ($bulk)
 for (i = 0; i < slides.length; i++) {
   $bulk.appendChild(slides[i]);
 }
 
-// Add the generated slides to the DOM
+// .. and append the bulk to the dom
 $slides.appendChild($bulk);
 
 // Generate the Reveal Settings Object
@@ -270,18 +300,22 @@ var revealSettings = {
 
   // Optional libraries used to extend on reveal.js
   dependencies: [
-    {
-      src: '/reveal.js/plugin/markdown/marked.js',
-      condition: function() {
-        return !!document.querySelector('[data-markdown]');
-      }
-    },
-    {
-      src: '/reveal.js/plugin/markdown/markdown.js',
-      condition: function() {
-        return !!document.querySelector('[data-markdown]');
-      }
-    },
+
+    // TODO this code seems unecessary, as GH is already parsing our Md
+    //{
+      //src: '/reveal.js/plugin/markdown/marked.js',
+      //condition: function() {
+        //return !!document.querySelector('[data-markdown]');
+      //}
+    //},
+
+    ////
+    //{
+      //src: '/reveal.js/plugin/markdown/markdown.js',
+      //condition: function() {
+        //return !!document.querySelector('[data-markdown]');
+      //}
+    //},
 
     // Speaker notes
     {
@@ -295,6 +329,7 @@ var revealSettings = {
       async: true
     },
 
+    // Code highlighting
     {
       src: '/reveal.js/plugin/highlight/highlight.js',
       async: true,
@@ -302,6 +337,8 @@ var revealSettings = {
         window.hljs.initHighlightingOnLoad();
       }
     },
+
+    // HTML5 classlist fallback
     {
       src: '/reveal.js/lib/js/classList.js',
       condition: function() {
@@ -338,19 +375,93 @@ if (parseInt(jekyllFlags.blur, 10) > 0) {
 
   // Make the width and height 'auto' so it can stretch to the new
   // top-left-right-bottom dimensions
-  style.width = style.height = 'auto'
+  style.width = style.height = 'auto';
 
   // Set the blur with the css filter property
-  style.filter = style.webkitFilter = style.mozFilter = style.oFilter = style.msFilter = 'blur(' + jekyllFlags.blur + 'px)';
+  style.filter =
+    style.webkitFilter =
+    style.mozFilter =
+    style.oFilter =
+    style.msFilter = 'blur(' + jekyllFlags.blur + 'px)';
+
 }
 
-// Function definition
+console.log('im alive');
+
+// Convert the youtube background images to youtube video players
+// 1. Get all the background image nodes and filter the ones which are youtube
+// thumbnails
+// 2. Assing an id to the div and call the YouTube API to embed a video in there
+// 3. On the video's onLoad event (triggered by the API), we mute the video, disable controls and autoplay in a loop
+//    This action is triggered by the `tweakPlayer` function
+function onYouTubeIframeAPIReady() {
+  var backgroundNodes = document.getElementsByClassName('backgrounds')[0].childNodes;
+  var backgroundNode;
+  var backgroundImage;
+  var youtubeMatch;
+  var nodeId;
+  for (var i = 0, length = backgroundNodes.length; i < length; i++) {
+    backgroundNode = backgroundNodes[i];
+    console.log(backgroundNode);
+
+    backgroundImageUrl = backgroundNode.getAttribute('data-background-hash');
+    youtubeMatch = backgroundImageUrl && backgroundImageUrl.match(
+      /\/\/img\.youtube\.com\/vi\/([0-9a-zA-Z\-\_]+)\/maxresdefault.jpg/
+      );
+
+    if (youtubeMatch) {
+      // assing an ID to the background div so youtube's api can handle it
+      backgroundNode.id = nodeId = 'youtubeBackground' + i;
+
+      player = new YT.Player(nodeId, {
+        videoId: youtubeMatch[1],
+        loop: 1,
+
+        playerVars: {
+          controls: 0,
+          disablekb: 0,
+          modestbranding: 1,
+          showinfo: 0,
+          loop: 1,
+          enablejsapi: 1,
+          origin: window.location.origin,
+
+          // Youtube's loop flag won't work unless its a 'playlist'
+          // whereas a 'playlist' can also be a videoID
+          playlist: youtubeMatch[1]
+        },
+
+        events: {
+          onReady: tweakPlayer
+        }
+      });
+    }
+  }
+}
+
+// This function is triggered after the youtube embedder finished loading
+function tweakPlayer(event) {
+  console.log('youtube player finished loading', event);
+
+  // mute the sound
+  event.target.mute();
+
+  // play the video
+  event.target.playVideo();
+}
+
+// Function definitions
+// Returns the amount of html tags, given the input tagname
 function countTags(tag) { return content.getElementsByTagName(tag).length; }
 
+// Will add the CSS classes to the nodes we need to animate
+// Reveal.js will animate any node in the slide with the class 'fragment' and
+// an animation class, such as 'grow'.
 function animateNode($node, animation) {
   $node.classList.add('fragment');
 
-  // Classlist doesn't like whitespaces
+  // Add the specified animation name
+  // The Classlist function doesn't like whitespaces
   $node.classList.add(animation.replace(/\s+/g, ''));
 }
 

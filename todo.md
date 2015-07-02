@@ -1,6 +1,9 @@
 # Markyll
-- Auto size text
-- Create Demo slides
-- Background image presets
-- Blur background image flag
-- font awesome Icons
+
+[x] youtube video fullscreen muted background
+[ ] Auto size text
+[ ] Create Demo slides
+[ ] Background image presets
+[x] Blur background image flag
+[x] font awesome Icons
+[ ] split content flags

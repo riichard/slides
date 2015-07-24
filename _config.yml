@@ -1,6 +1,7 @@
 name: jekyll-reveal 
 markdown: kramdown
 highlighter: pygments
+permalink:   /:title
 
 kramdown:
   input: GFM
@@ -8,7 +9,7 @@ kramdown:
 collections:
   slides:
     output: true
-
+    
 defaults:
 
   -

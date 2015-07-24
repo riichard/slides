@@ -395,7 +395,7 @@ console.log('im alive');
 // 3. On the video's onLoad event (triggered by the API), we mute the video, disable controls and autoplay in a loop
 //    This action is triggered by the `tweakPlayer` function
 function onYouTubeIframeAPIReady() {
-  var backgroundNodes = document.getElementsByClassName('backgrounds')[0].childNodes;
+  var backgroundNodes = document.getElementsByClassName('slide-background')
   var backgroundNode;
   var backgroundImage;
   var youtubeMatch;
@@ -415,24 +415,29 @@ function onYouTubeIframeAPIReady() {
 
       player = new YT.Player(nodeId, {
         videoId: youtubeMatch[1],
-        loop: 1,
 
         playerVars: {
           controls: 0,
           disablekb: 0,
           modestbranding: 1,
           showinfo: 0,
-          loop: 1,
           enablejsapi: 1,
           origin: window.location.origin,
 
+          // Don't show related videos
+          rel: 0,
+
+          // Disable video annotations
+          iv_load_policy: 3,
+
           // Youtube's loop flag won't work unless its a 'playlist'
           // whereas a 'playlist' can also be a videoID
-          playlist: youtubeMatch[1]
+          //playlist: youtubeMatch[1]
         },
 
         events: {
-          onReady: tweakPlayer
+          onReady: tweakPlayer,
+          onStateChange: loopVideo
         }
       });
     }
@@ -448,6 +453,16 @@ function tweakPlayer(event) {
 
   // play the video
   event.target.playVideo();
+}
+
+function loopVideo(event){
+  console.log(event);
+  // State '0' means 'video ended'
+  if (event.data === 0) {
+    console.log('playing video back at the start');
+    // Play the video back at the start
+    event.target.playVideo();
+  }
 }
 
 // Function definitions

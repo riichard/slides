@@ -10,9 +10,7 @@ transition: concave
 
 
 # [heartbeat 3x] Slide one [glass spin] 
-background-video: 
-background-iframe: 
-background-image: 
+background-video: https://www.youtube.com/watch?v=YeqyR6ksA0w 
 {% comment %}background: auto detect based on extension of url or hex code, otherwise image {% endcomment %}
 
 ```
@@ -35,6 +33,8 @@ Test inline `code` highlighting
 [go to second slide](#/2)
 
 ## Deep
+
+background-video: https://www.youtube.com/watch?v=8kWMPTTMAY4
 
 notes: Show this up as __notes__ on the _side_
 

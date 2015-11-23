@@ -1,37 +1,14 @@
-/**
+/*
  * This script converts the rendered HTML by the jekyll converter to separate
  * slides and saves them each into <section> tags.
  * It also parses the configuration flags.
  */
 
 //!(function(document, Reveal){
-//====================
-// Done:
-// - Notes
-// - Remove config text from object
-// - Fragment list items, globally or slide specific
-// - Animate slides
-// - IFrame / Video URL as background
-// - Subsections based on H2+ headers
-// - Ignore config options in code nodes
-// - Disable animations on first nodes
-// - Parameters as content with underscores http://_big_joke_.com/
-// - Ignore config options in code nodes
-//
-// TODO:
-// Next Release:
-// - Apple Touch icon
-// - Align config
-// - Logo config
-// - Auto add layout the slides according to their content. Css only? ^^
-// - Auto resize text size if it's overflowing
-// - Sets of background images
-// - Notes working without socketio
-// - Easy include icons (fontawesome)
-// - Fragment specific items
-//
 
 var $slide = null;
+
+// Variable to track if the content being parsed in the node should be added to the notes section
 var isNoting = false;
 var $bulk = document.createDocumentFragment();
 var $content = document.getElementById('content');
@@ -53,19 +30,23 @@ var line;
 var split;
 var $node;
 var $notes;
-var subsliding;
+var isMakingSubslides;
 
-// Animate is by defiault the globally set animation parameter
-// Once a slide adds it as a config flag, it will overwrite the default
-// setting and add it to each node within that slide After the config was set
+// Animate is by default the globally set animation parameter
+// Once a slide adds 'animate: true' as a config flag, it will overwrite the default
+// setting of the file and add it to each node within that slide After the config
+// was set.
+// This means that all nodes, sub-slides, images (not the background) will be
+// animated.
 // After creating each new slide, it will be reset to the default animation flag
+// for the next sibling slides
 var animate = false;
 
 // The slides are stored in documentFragments, pushed to the slides array.
 var slides = [];
 
-// Store jekyll's generated HTML as an alias to $nodes
-// We will organise them into separate slides based on the HTML tags and
+// Store jekyll's generated HTML to $nodes
+// We will organise them into separate slides based on it's HTML tags and
 // their contents. Read more on that here: //TODO
 var $nodes = $content.children;
 
@@ -82,11 +63,11 @@ while (($node = $nodes[0]) && $node !== undefined) {
     isNoting = false;
 
     // Create a new slide Three
-    subsliding = false;
+    isMakingSubslides = false;
 
-    // If we're dealing with a section tag, it's probably created for the
-    // reveal.js API. We are skipping all our handling and just add the slide
-    // to the deck
+    // If we're dealing with a <section> tag, it's probably created for the
+    // reveal.js API with HTML. We are skipping all our parsing and just add the slide
+    // to our deck
     if ($node.tagName === 'SECTION') {
       slides.push($node);
 
@@ -109,20 +90,22 @@ while (($node = $nodes[0]) && $node !== undefined) {
     continue;
   }
 
-  // An H2 tag will convert the current slide into a slide with vertical slides
-  // If the current slide was already converted we won't do so
-  // It converts it by creating a new overlapping section element. Call it sectionA
+  // An H2 tag will convert the current slide into a slide with vertical sub-slides
+  // If the current slide was already converted to a sub-slide we won't do any
+  // conversion.
+  // It converts the slide by creating a new overlapping section element. We call it sectionA
   // The current slide (sectionB) will be appended to that section
-  // Then we create a new section, append that to sectionA as well
+  // Then we create a new section, append that to sectionA as well. All content
+  // that follows after the B slide will be inserted in here.
   //  Visually:
   //  Before:
   //    <section id="B">
-  //      H1 Blah content
+  //      H2 Blah content
   //    </section>
   //  After:
   //    <section id="A">
   //      <section id="B">
-  //        H1 Blah content
+  //        H2 Blah content
   //      </section>
   //      <section id="C">
   //      </section>
@@ -132,8 +115,8 @@ while (($node = $nodes[0]) && $node !== undefined) {
   //  If we bump into another H2, we'll create another section, and add that to A
   if ($node.tagName === 'H2') {
     // Create A, move B to A, and overwrite $slide by C
-    if (subsliding === false) {
-      subsliding = true;
+    if (isMakingSubslides === false) {
+      isMakingSubslides = true;
       var A = document.createElement('section');
 
       // Add B to A
@@ -149,7 +132,7 @@ while (($node = $nodes[0]) && $node !== undefined) {
     $slide = C;
   }
 
-  // Read config options in the node
+  // Parse and read the config options in the node
   // Don't do this for <code> elements
   if ($node.tagName !== 'CODE') {
     var textLines = $node.innerHTML.split('\n');
@@ -186,19 +169,22 @@ while (($node = $nodes[0]) && $node !== undefined) {
       // Only add the option if its in a whitelisted array of element options
       if (~elementOptions.indexOf(configKey)) {
         var match;
-        console.log(configKey)
 
         // Youtube background options
-        // If property is background-video and its a youtube link, grab the
+        // 1) If property is background-video and its a youtube link, grab the
         // video id, and display its thumbnail as a background image.
-        // Later in our code, we will replace the created background divs with
+        // 2) Later in our code, we will replace the created background divs with
         // youtube players trough youtube player's api.
         // I previously included the videos trough an embed code. This didn't
-        // allow me to mute the sound.
-        // Muting the sound is important when displaying the videos in an
-        // overview page.
+        // allow me to mute the sound or autoplay the video..
+        // Muting the sound is important when displaying the videos as a
+        // background, or when embedding in another website.
         if (configKey === 'background-video'
             && (match = configValue.match(/https?\:\/\/www\.youtube\.com\/watch\?v=([A-Za-z0-9\_\-]+)/i)).length > 0) {
+
+          // Make the video thumbnail the background image. Later in our code
+          // we will find all youtube-thumbnail background images and replace
+          // those with videos.
           configKey = 'background';
           configValue = 'https://img.youtube.com/vi/' + match[1] + '/maxresdefault.jpg';
         }
@@ -294,28 +280,11 @@ var revealSettings = {
   leap: {
     naturalSwipe: false,    // Invert swipe gestures
     pointerOpacity: 0.5,      // Set pointer opacity to 0.5
-    //pointerColor: '#d80000' // Red pointer
-    pointerColor: '#ffffff' // Red pointer
+    pointerColor: '#d80000' // Red pointer
   },
 
   // Optional libraries used to extend on reveal.js
   dependencies: [
-
-    // TODO this code seems unecessary, as GH is already parsing our Md
-    //{
-      //src: '/reveal.js/plugin/markdown/marked.js',
-      //condition: function() {
-        //return !!document.querySelector('[data-markdown]');
-      //}
-    //},
-
-    ////
-    //{
-      //src: '/reveal.js/plugin/markdown/markdown.js',
-      //condition: function() {
-        //return !!document.querySelector('[data-markdown]');
-      //}
-    //},
 
     // Speaker notes
     {
@@ -361,7 +330,8 @@ if (typeof jekyllFlags === 'undefined') {
   jekyllFlags = {};
 }
 
-// If the blur flag was set to 'yes' or 'true', set it to 20 (default value)
+// If the blur flag was set to 'yes' or 'true', change it to a numerical value
+// of 20 (default value)
 if (typeof jekyllFlags.blur === 'string' && jekyllFlags.blur.match(/yes|true/)) {
   jekyllFlags.blur = 20;
 }
@@ -386,8 +356,6 @@ if (parseInt(jekyllFlags.blur, 10) > 0) {
 
 }
 
-console.log('im alive');
-
 // Convert the youtube background images to youtube video players
 // 1. Get all the background image nodes and filter the ones which are youtube
 // thumbnails
@@ -395,14 +363,15 @@ console.log('im alive');
 // 3. On the video's onLoad event (triggered by the API), we mute the video, disable controls and autoplay in a loop
 //    This action is triggered by the `tweakPlayer` function
 function onYouTubeIframeAPIReady() {
-  var backgroundNodes = document.getElementsByClassName('slide-background')
+  var backgroundNodes = document.getElementsByClassName('slide-background');
+  var length = backgroundNodes.length;
+  var i = 0
   var backgroundNode;
   var backgroundImage;
   var youtubeMatch;
   var nodeId;
-  for (var i = 0, length = backgroundNodes.length; i < length; i++) {
+  for (; i < length; i++) {
     backgroundNode = backgroundNodes[i];
-    console.log(backgroundNode);
 
     backgroundImageUrl = backgroundNode.getAttribute('data-background-hash');
     youtubeMatch = backgroundImageUrl && backgroundImageUrl.match(
@@ -428,11 +397,8 @@ function onYouTubeIframeAPIReady() {
           rel: 0,
 
           // Disable video annotations
-          iv_load_policy: 3,
+          iv_load_policy: 3
 
-          // Youtube's loop flag won't work unless its a 'playlist'
-          // whereas a 'playlist' can also be a videoID
-          //playlist: youtubeMatch[1]
         },
 
         events: {
@@ -456,7 +422,6 @@ function tweakPlayer(event) {
 }
 
 function loopVideo(event){
-  console.log(event);
   // State '0' means 'video ended'
   if (event.data === 0) {
     console.log('playing video back at the start');
@@ -467,7 +432,9 @@ function loopVideo(event){
 
 // Function definitions
 // Returns the amount of html tags, given the input tagname
-function countTags(tag) { return content.getElementsByTagName(tag).length; }
+function countTags(tag) {
+  return content.getElementsByTagName(tag).length;
+}
 
 // Will add the CSS classes to the nodes we need to animate
 // Reveal.js will animate any node in the slide with the class 'fragment' and

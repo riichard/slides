@@ -51,9 +51,9 @@ Option                      | Description
 When presenting your presentation, use the following shortcuts:
 
 Press the letter | What does it do
----:             | ---
-`f`              | Make your presentation __f__ull-screen
-`n`              | Popups-up a second window with a preview of the next slide and a box with your __n__otes
-`o`              | Opens an __o__verview of all your slides.
-`b` or `.`       | Turn the screen __b__lack.
+---:             | :---
+`f`              | Make your presentation F-ullscreen
+`n`              | Popups-up a second window with a preview of the next slide and a box with your N-otes
+`o`              | Opens an O-verview of all your slides.
+`b` or `.`       | Turn the screen B-lack.
 `ESC`            | Exit fullscreen.

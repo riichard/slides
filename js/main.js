@@ -71,7 +71,10 @@ while (($node = $nodes[0]) && $node !== undefined) {
     if ($node.tagName === 'SECTION') {
       slides.push($node);
 
-      //continue;
+      // Remove $node as a child from $nodes so it doesn't create an infinite loop
+      $content.removeChild($node);
+
+      continue;
     }
 
     // Set the default animation settings for the nodes inside the slide
@@ -100,10 +103,12 @@ while (($node = $nodes[0]) && $node !== undefined) {
   //  Visually:
   //  Before:
   //    <section id="B">
+  //      Content
   //      H2 Blah content
   //    </section>
   //  After:
   //    <section id="A">
+  //      Content
   //      <section id="B">
   //        H2 Blah content
   //      </section>
@@ -116,6 +121,7 @@ while (($node = $nodes[0]) && $node !== undefined) {
   if ($node.tagName === 'H2') {
     // Create A, move B to A, and overwrite $slide by C
     if (isMakingSubslides === false) {
+      // Idea, only create a slide swap when $slide is empty
       isMakingSubslides = true;
       var A = document.createElement('section');
 
@@ -412,7 +418,6 @@ function onYouTubeIframeAPIReady() {
 
 // This function is triggered after the youtube embedder finished loading
 function tweakPlayer(event) {
-  console.log('youtube player finished loading', event);
 
   // mute the sound
   event.target.mute();
@@ -422,9 +427,9 @@ function tweakPlayer(event) {
 }
 
 function loopVideo(event){
+
   // State '0' means 'video ended'
   if (event.data === 0) {
-    console.log('playing video back at the start');
     // Play the video back at the start
     event.target.playVideo();
   }

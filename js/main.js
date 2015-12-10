@@ -268,6 +268,10 @@ while (($node = $nodes[0]) && $node !== undefined) {
     }
   }
 
+  // Make all links within the slide point to its relative direction.
+  // A[up/down/left/right/next/previous]
+  makeLinksRelative($node);
+
   $slide.appendChild($node);
 }
 
@@ -341,6 +345,19 @@ if (typeof jekyllFlags === 'undefined') {
 // of 20 (default value)
 if (typeof jekyllFlags.blur === 'string' && jekyllFlags.blur.match(/yes|true/)) {
   jekyllFlags.blur = 20;
+}
+
+// Make all a tags within `Element` linking to up/down/left/right direct to a slide
+function makeLinksRelative(Element) {
+  var aElements = Element.getElementsByTagName('a');
+  var href; // We save href as a variable to limit dom-lookups
+  for (var i = 0; i < aElements.length; i++) {
+    if ((href = aElements[i].getAttribute('href') || '')
+        .match(/^(up|down|right|left|next|previous)$/i)) {
+      aElements[i].className += ' navigate-' + href;
+      aElements[i].href = '#';
+    }
+  }
 }
 
 // Blur the background image if the blur flag was set

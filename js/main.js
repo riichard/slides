@@ -11,8 +11,9 @@ var $slide = null;
 // Variable to track if the content being parsed in the node should be added to the notes section
 var isNoting = false;
 var $bulk = document.createDocumentFragment();
-var $content = document.getElementById('content');
-var $slides = document.getElementById('slides');
+// Markdown has a convention to add header texts as ID's to hX elements. Fixes issue #6
+var $content = document.getElementById('__content__');
+var $slides = document.getElementById('__slides__');
 var elementOptions = [
     'id',
     'background',

@@ -141,8 +141,8 @@ while (($node = $nodes[0]) && $node !== undefined) {
   }
 
   // Parse and read the config options in the node
-  // Don't do this for <code> elements
-  if ($node.tagName !== 'CODE') {
+  // Don't do this for <code> or <pre> elements
+  if ($node.tagName !== 'CODE' || $node.tagName !== 'PRE') {
     var textLines = $node.innerHTML.split('\n');
     for (i = 0; i < textLines.length; i++) {
       line = textLines[i];

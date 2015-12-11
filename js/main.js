@@ -11,6 +11,7 @@ var $slide = null;
 // Variable to track if the content being parsed in the node should be added to the notes section
 var isNoting = false;
 var $bulk = document.createDocumentFragment();
+
 // Markdown has a convention to add header texts as ID's to hX elements. Fixes issue #6
 var $content = document.getElementById('__content__');
 var $slides = document.getElementById('__slides__');
@@ -406,6 +407,8 @@ function onYouTubeIframeAPIReady() {
       // assing an ID to the background div so youtube's api can handle it
       backgroundNode.id = nodeId = 'youtubeBackground' + i;
 
+      // Disable jscs camelCase code validation for this block
+      // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
       player = new YT.Player(nodeId, {
         videoId: youtubeMatch[1],
 
@@ -430,6 +433,8 @@ function onYouTubeIframeAPIReady() {
           onStateChange: loopVideo
         }
       });
+
+      // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
     }
   }
 }
@@ -444,7 +449,7 @@ function tweakPlayer(event) {
   event.target.playVideo();
 }
 
-function loopVideo(event){
+function loopVideo(event) {
 
   // State '0' means 'video ended'
   if (event.data === 0) {

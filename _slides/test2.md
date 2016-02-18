@@ -1,4 +1,6 @@
 ---
+title: Test2
+
 ---
 
 # This creates a title slide

@@ -21,8 +21,10 @@ var elementOptions = [
     'background-image',
     'background-iframe',
     'background-video',
+    'background-color',
     'background-size',
     'background-repeat',
+    'background-transition',
     'transition',
     'transition-speed'
   ];
@@ -148,7 +150,9 @@ while (($node = $nodes[0]) && $node !== undefined) {
       line = textLines[i];
       split = line.split(':');
       configKey = split[0];
-      configValue = line.substring(line.indexOf(':') + 1);
+      configValue = line.substring(line.indexOf(':') + 1)
+        .replace('<br>', '') // Remove <BR> tags
+        .replace(/^\s+/,''); // Remove whitespace in front of the value
 
       // Parse the text to the notes section if it starts with notes:
       if (i === 0 && configKey === 'notes') {
@@ -270,7 +274,7 @@ while (($node = $nodes[0]) && $node !== undefined) {
   }
 
   // Make all links within the slide point to its relative direction.
-  // A[up/down/left/right/next/previous]
+  // A[up/down/left/right/next/prev]
   makeLinksRelative($node);
 
   $slide.appendChild($node);
@@ -354,7 +358,7 @@ function makeLinksRelative(Element) {
   var href; // We save href as a variable to limit dom-lookups
   for (var i = 0; i < aElements.length; i++) {
     if ((href = aElements[i].getAttribute('href') || '')
-        .match(/^(up|down|right|left|next|previous)$/i)) {
+        .match(/^(up|down|right|left|next|prev)$/i)) {
       aElements[i].className += ' navigate-' + href;
       aElements[i].href = '#';
     }

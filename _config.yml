@@ -1,4 +1,4 @@
-name: jekyll-reveal 
+name: jekyll-reveal
 markdown: kramdown
 highlighter: pygments
 permalink:   /:title
@@ -9,24 +9,24 @@ kramdown:
 collections:
   slides:
     output: true
-    
+
 defaults:
 
   -
     scope:
       path: ""
     values:
-      height: 500 
+      height: 500
       width: 970
       margin: 0.1
       minScale: 0.2
-      maxScale: 1.5
-      theme: "moon"
+      maxScale: 1
+      theme: "black"
       layout: slide
       controls: true
       progress: true
       slideNumber: false
-      history: false
+      history: true
       keyboard: true
       overview: true
       center: true

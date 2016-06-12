@@ -42,7 +42,7 @@ automatically generate this information for the `OPTIONS` request method
 ## Setup
 - We will use a cloud server instead of setting it up locally
 - Signup on mlab.com
-- Download RoboMongo (it's a tool we use to run query experiments with the database)
+- Download RoboMongo (it's a tool we use to run query experiments with the database) https://robomongo.org/download
 
 # Create database, user
 (open screenshots)

@@ -155,4 +155,12 @@ mongojs('username:password@example.com/mydb?authMechanism=SCRAM-SHA-1',
 - Connect your AngularJS News App to the API
 - Complete [NodeJS tutorials](https://thenewboston.com/videos.php?cat=355)
 
+# 1. Serve HTML files
+- everything in ./frontend should be available on http://localhost:3000
+- so:
+- ./frontend/about.html should be visible on localhost:3000/about.html
+- ./frontend/home.html should be visible on localhost:3000/home.html
+- ./frontend/contact.html should be visible on localhost:3000/contact.html
+- ./frontend/main.js should be visible on localhost:3000/main.js
 
+#

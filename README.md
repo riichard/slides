@@ -28,17 +28,11 @@ creating slides. Each slide will automatically be listed on the front page.
 
 1. Clone this repo
 2. Install reveal.js submodule
-```
-git submodule update --init --recursive
-```
+  `git submodule update --init --recursive`
 3. Install jekyll
-```
-gem install jekyll
-```
+  `gem install jekyll`
 4. Build
-```
-jekyll serve build --watch
-```
+  `jekyll serve build --watch`
 
 
 # Syntax

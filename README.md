@@ -24,6 +24,26 @@ Github will now start building your slides page.
 Bonus, Add all your HTML/markdown slides to the `slides` folder or start
 creating slides. Each slide will automatically be listed on the front page.
 
+## Local installation
+
+1. Clone this repo
+2. Install reveal.js submodule
+
+```
+git submodule update --init --recursive
+```
+
+3. Install jekyll
+```
+gem install jekyll
+```
+
+4. Build
+```
+jekyll serve build --watch
+```
+
+
 # Syntax
 
 This is an example file called `example.md` to create a slide deck. 
